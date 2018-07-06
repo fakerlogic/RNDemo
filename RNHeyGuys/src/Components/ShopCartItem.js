@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {View, Text, StyleSheet} from 'react-native'
+import {View, Text, StyleSheet, Image, Button} from 'react-native'
 
 
 const ShopCartItemType {
@@ -33,31 +33,34 @@ export default class ShopCartItem extends React.Component {
 
   renderSelectButton = (selected) => {
     return (
-
+      <Button
+        onPress={}
+        title='dian'
+      />
     )
   }
 
   renderSkuImage = (skuImageUrl) => {
     return (
-
+      <Image source={{uri: skuImageUrl} style={{height: 80, width: 80}}}  />
     )
   }
 
   rendertitle = (title) => {
     return (
-
+      <Text>{title}</Text>
     )
   }
 
   renderSubtitle = (subTitle) => {
     return (
-
+      <Text>{subTitle}</Text>
     )
   }
 
   renderPrice = (price) => {
     return (
-
+      <Text>{price}</Text>
     )
   }
 
