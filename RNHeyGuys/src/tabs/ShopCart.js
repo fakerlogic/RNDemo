@@ -1,5 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, SectionList } from 'react-native'
+import ShopCartItem from '../components/ShopCartItem'
+
 
 class ShopCart extends React.Component {
 
@@ -17,12 +19,18 @@ class ShopCart extends React.Component {
             {title: 'D', data: ['Devin']},
             {title: 'J', data: ['Jackson', 'James', 'Jillian', 'Jimmy', 'Joel', 'John', 'Julie']},
           ]}
-          renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
-          renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
+          renderItem={({item, index}) => this.renderItem(item, index)}
+
         >
         </SectionList>
       </View>
-    );
+    )
+  }
+
+  renderItem = (item, index) => {
+    return (
+      <ShopCartItem id={index} />
+    )
   }
 }
 
@@ -32,8 +40,9 @@ export default ShopCart
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'red',
     justifyContent: 'center',
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: '#F5FCFF',
   }
 })
