@@ -72,7 +72,7 @@ Navigation.startTabBasedApp({
   tabsStyle: {
     tabBarSelectedButtonColor: 'rgba(254, 205, 63, 1)',
     tabBarBackgroundColor: 'white',
-    initialTabIndex: 2
+    initialTabIndex: 3
   },
   appStyle: {
     orientation: 'portrait',

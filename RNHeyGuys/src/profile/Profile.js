@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { FlatList, Text, View, StyleSheet, Image, TouchableWithoutFeedback, Alert } from 'react-native'
 import { green, yellow } from 'ansi-colors'
 import { Toast } from '../common/Toast'
+import request from '../utils/request'
+import axios from 'axios'
 
 class Profile extends React.Component {
 
@@ -40,7 +42,7 @@ class Profile extends React.Component {
     return (
       <View style={{backgroundColor: 'white'}}>
         <View style={styles.imageContainer}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title} onPress={() => this.getdata()}>{title}</Text>
           <Image 
             source={require("../img/userInfo/userip.png")} 
             style={styles.image} 
@@ -69,21 +71,99 @@ class Profile extends React.Component {
     )
   }
 
+  getdata() {
+    // console.log('getdata')
+    // request('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
+    // categroyType: '2'
+    // }).then(res => Alert.alert(JSON.stringify(res.data)))
+    // .catch(error => Alert.alert(error))
+    // axios.post ('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
+    //         'categoryType': '2',
+    //     },{
+    //         headers:{
+    //           Accept: "application/json",
+    //           'Content-Type': 'application/x-www-form-urlencoded'
+    //         }
+    //     }
+    //   )
+    //   .then(res => Alert.alert(JSON.stringify(res.data)))
+    //   .catch(err => Alert.alert('err'))
+  }
+
   getUserInfo() {
-    fetch('http://192.168.11.12:8181//getUserInfo', {
-      method: 'get',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+    // console.log('getdata')
+    // request('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
+    // categroyType: '2'
+    // }).then(res => Alert.alert(JSON.stringify(res.data)))
+    // .catch(error => Alert.alert(error))
+    request('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
+      body: {
+        categroyType: '2'
       }
-    })
-    .then((response) => response.json())
-    .then((responseJson) => { 
-      console.log(responseJson) 
-      const data = this.transformData(responseJson.data)
-      this.setState({data})
-    })
-    .catch((error) => { console.log(error) })
+    }).then(res => Alert.alert(JSON.stringify(res.data)))
+
+    // request('GET', 'GOODSCORE-SERVICE/category/categroysByType.apec', 
+    // {categoryType: '2'})
+    // .then(data => console.log('data====> ' + data))
+
+    // axios.post('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
+    //     categoryType: '2'
+    //   },{
+    //     headers: {
+    //       'content-type': 'application/x-www-form-urlencoded'
+    //     }
+    //   })
+    //   .then(res => {
+    //     console.log('success')
+    //     console.log(`res: ${res}`)
+    //   })
+    //   .catch(err => {
+    //     console.log('err')
+    //     console.log(`error: ${err}`)
+    //   })
+
+      
+
+    // fetch('http://heyguys.ap88.com/CMS-COMPONENTSETTING-SERVICE/cmsComponentValue/getSettingByFileId.apec2', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     tempFileId: 1,
+    //     viewType: 2
+    //   })
+    // })
+    //   .then((response) => {
+    //     // Alert.alert(JSON.stringify(response))
+    //     return response.json()
+    //   })
+    //   .then((responseJson) => {
+    //     console.log('data===> ' + responseJson)
+    //     Alert.alert(JSON.stringify(responseJson))
+
+    //     return responseJson;
+    //   })
+    //   .catch((error) => {
+    //     console.error('error====>'+error);
+    //   })
+
+
+    // fetch('http://192.168.11.12:8181//getUserInfo', {
+    //   method: 'GET',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+    // .then((response) => response.json())
+    // .then((responseJson) => { 
+    //   console.log('data+++++++'+responseJson) 
+    //   const data = this.transformData(responseJson.data)
+    //   this.setState({data})
+    // })
+    // .catch((error) => { console.log('error----'+error) })
   }
 
   transformData = (data) => {
