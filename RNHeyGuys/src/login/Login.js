@@ -19,7 +19,7 @@ export default class Login extends React.Component {
   }
 
   countDown = () => {
-    console.log(`倒计时=== ${this.state.requestCapchaTime}s`)
+    console.log(`倒计时===== ${this.state.requestCapchaTime}s`)
     if (this.state.requestCodeTime === 0) {
       this.setState({
         shouldShowCoundDown: false
