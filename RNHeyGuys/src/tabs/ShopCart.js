@@ -29,7 +29,7 @@ class ShopCart extends React.Component {
 
   renderItem = (item, index) => {
     return (
-      <ShopCartItem id={index} />
+      <ShopCartItem key={`ShopCartItem-${index}`} />
     )
   }
 }

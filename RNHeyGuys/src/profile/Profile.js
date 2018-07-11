@@ -12,10 +12,14 @@ class Profile extends React.Component {
     this.state = {
       data: null
     }
+    this.props.navigator.setStyle({
+      navBarBackgroundColor: 'blue'
+    })
   }
 
   componentDidMount() {
     this.getUserInfo()
+    
   }
 
   render() {
@@ -71,99 +75,14 @@ class Profile extends React.Component {
     )
   }
 
-  getdata() {
-    // console.log('getdata')
-    // request('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
-    // categroyType: '2'
-    // }).then(res => Alert.alert(JSON.stringify(res.data)))
-    // .catch(error => Alert.alert(error))
-    // axios.post ('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
-    //         'categoryType': '2',
-    //     },{
-    //         headers:{
-    //           Accept: "application/json",
-    //           'Content-Type': 'application/x-www-form-urlencoded'
-    //         }
-    //     }
-    //   )
-    //   .then(res => Alert.alert(JSON.stringify(res.data)))
-    //   .catch(err => Alert.alert('err'))
-  }
-
   getUserInfo() {
-    // console.log('getdata')
-    // request('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
-    // categroyType: '2'
-    // }).then(res => Alert.alert(JSON.stringify(res.data)))
-    // .catch(error => Alert.alert(error))
+
     request('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
       body: {
-        categroyType: '2'
+        categoryType: '2'
       }
-    }).then(res => Alert.alert(JSON.stringify(res.data)))
+    }).then(res => Alert.alert(JSON.stringify(res)))      
 
-    // request('GET', 'GOODSCORE-SERVICE/category/categroysByType.apec', 
-    // {categoryType: '2'})
-    // .then(data => console.log('data====> ' + data))
-
-    // axios.post('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
-    //     categoryType: '2'
-    //   },{
-    //     headers: {
-    //       'content-type': 'application/x-www-form-urlencoded'
-    //     }
-    //   })
-    //   .then(res => {
-    //     console.log('success')
-    //     console.log(`res: ${res}`)
-    //   })
-    //   .catch(err => {
-    //     console.log('err')
-    //     console.log(`error: ${err}`)
-    //   })
-
-      
-
-    // fetch('http://heyguys.ap88.com/CMS-COMPONENTSETTING-SERVICE/cmsComponentValue/getSettingByFileId.apec2', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     tempFileId: 1,
-    //     viewType: 2
-    //   })
-    // })
-    //   .then((response) => {
-    //     // Alert.alert(JSON.stringify(response))
-    //     return response.json()
-    //   })
-    //   .then((responseJson) => {
-    //     console.log('data===> ' + responseJson)
-    //     Alert.alert(JSON.stringify(responseJson))
-
-    //     return responseJson;
-    //   })
-    //   .catch((error) => {
-    //     console.error('error====>'+error);
-    //   })
-
-
-    // fetch('http://192.168.11.12:8181//getUserInfo', {
-    //   method: 'GET',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   }
-    // })
-    // .then((response) => response.json())
-    // .then((responseJson) => { 
-    //   console.log('data+++++++'+responseJson) 
-    //   const data = this.transformData(responseJson.data)
-    //   this.setState({data})
-    // })
-    // .catch((error) => { console.log('error----'+error) })
   }
 
   transformData = (data) => {
