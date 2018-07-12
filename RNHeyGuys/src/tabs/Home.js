@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
-class Home extends React.Component {
+export default class Home extends React.Component {
 
   render() {
     return (
@@ -12,7 +12,6 @@ class Home extends React.Component {
   }
 }
 
-export default Home
 
 
 const styles = StyleSheet.create({

@@ -1,66 +1,39 @@
 import React from 'react'
-import {View, Text, StyleSheet, Image, Button, TextInput} from 'react-native'
-import CountDownButton from '../components/CountDownButton'
+import { View, Text, StyleSheet, Image, Button, TextInput, CheckBox } from 'react-native'
+import CountButton from '../components/CountButton'
+import Request from '../utils/request'
 
 export default class Login extends React.Component {
 
   state = {
-    timerCount: this.props.timerCount || 30,
-    timerTitle: this.props.timerTitle || '获取验证码',
-    counting: false,
-    enable: true,
+    phoneNumber: '',
+    capcha: ''
   }
   
-  shouldStartCountting = (shouldStart) => {
-    if (this.state.counting) { return }
-    if (shouldStart) {
-        this.countDown()
-        this.setState({counting: true,selfEnable:false})
-    } else {
-        this.setState({selfEnable:true})
-    }
-  }
-
-  countDown = () => {
-    console.log(`倒计时===== ${this.state.requestCapchaTime}s`)
-    const codeTime = this.state.timerCount;
-    const now = Date.now()
-    const overTimeStamp = now + codeTime * 1000 + 100/*过期时间戳（毫秒） +100 毫秒容错*/
-    this.interval = setInterval(() =>{
-        /* 切换到后台不受影响*/
-        const nowStamp = Date.now()
-        if (nowStamp >= overTimeStamp) {
-            /* 倒计时结束*/
-            this.interval && clearInterval(this.interval);
-            this.setState({
-                timerCount: codeTime,
-                timerTitle: this.props.timerTitle || '获取验证码',
-                counting: false,
-                selfEnable: true
-            })
-            if (this.props.timerEnd) {
-                this.props.timerEnd()
-            }
-        } else {
-            const leftTime = parseInt((overTimeStamp - nowStamp)/1000, 10)
-            this.setState({
-                timerCount: leftTime,
-                timerTitle: `重新获取(${leftTime}s)`,
-            })
-        }
-  }
-
   componentDidMount() {
-    
+    const { type } = this.props
+    console.log(`props type: ${type}`)
   }
 
-  componentWillUnmount() {
-    clearInterval(this.interval)
+  getCapcha(shouldStartCounting) {
+    console.log('获取验证码中..')
+    this.setState({
+      state: '正在请求验证码'
+    })
+    setTimeout(() => {
+      const requestSucc = Math.random() + 0.5 > 1
+      this.setState({
+        state: `（随机）模拟验证码获取${requestSucc ? '成功' : '失败'}`
+      })
+      shouldStartCounting && shouldStartCounting(requestSucc)
+    }, 1000)
   }
 
   render() {
-    const {onClick, style, textStyle, enable, disableColor} = this.props
-    const {counting, timerTitle, selfEnable} = this.state
+    const { type } = this.props
+    const { phoneNumber } = this.state
+    console.log(`phoneNumber: ${phoneNumber}`)
+    const buttonTitle = type === 'login' ? '登录' : '注册'
     return (
       <View style={styles.container}>
         <Image style={styles.logo} source={require('../img/login/ip1.png')} resizeMode='contain' />
@@ -71,10 +44,14 @@ export default class Login extends React.Component {
             placeholder='请输入手机号'
             maxLength={11}
             keyboardType='number-pad'
-            onChangeText={(text) => this.setState({text})}
+            onChangeText={(text) => this.setState({phoneNumber: text})}
           />
           <View style={styles.verticalLine}/>
-          <Text style={styles.capcha} onPress={this.getCapcha}>{this.state.shouldShowCoundDown ? this.state.requestCapchaTime : '获取验证码'}</Text>
+          <CountButton enable={phoneNumber.length}
+            style={styles.capcha}
+            textStyle={{color: 'black'}}
+            onClick={(shouldStartCounting) => this.getCapcha(shouldStartCounting)}
+          />
         </View>
         <View style={styles.textInputContainer}>
           <Image source={require('../img/login/shield.png')} style={styles.textInputImage}/>
@@ -86,24 +63,66 @@ export default class Login extends React.Component {
             onChangeText={(text) => this.setState({text})}
           />
         </View>
+        { type === 'register' ? this.renderProtocol() : null }
         <View style={styles.buttonContainer}>
           <Button 
             style={styles.loginButton} 
-            title='登录' 
+            title={buttonTitle}
             onPress={this.loginButtonOnPress} 
             backgroundColor='yellow'
             color='white'
           />
         </View>
-        <Text style={styles.register}>注册</Text>
+        { type === 'login' ? this.renderRegister() : this.renderHasAccount() }
+
       </View>
     )
   }
 
-  loginButtonOnPress = () => {
-    // this.refs.toast.show('login', 500)
+  /** render */
+
+  renderRegister = () => {
+    return (<Text style={styles.register} onPress={this.registerOnPress}>注册</Text>)
   }
 
+  renderHasAccount = () => {
+    return (<Text style={styles.hasAccount} onPress={this.hasAccountOnPress}>已有账号登录</Text>)
+  }
+
+  renderProtocol = () => {
+    return (
+      <View style={{flexDirection: 'row', paddingTop: 20}}>
+        
+        <Text>我已同意并阅读</Text>
+        <Text style={{color: 'rgba(73, 154, 256, 1)', paddingLeft: 4}}>好伙计用户协议</Text>
+      </View>
+    )
+  }
+
+  /** actions */
+
+  loginButtonOnPress = () => {
+    // this.refs.toast.show('login', 500)
+    console.log('loginButtonOnPress')
+  }
+
+  registerOnPress = () => {
+    console.log('registerOnPress')
+    this.props.navigator && this.props.navigator.push({
+      screen: 'RNHeyGuys.Login',
+      title: '注册',
+      animated: true,
+      backButtonTitle: '返回',
+      passProps: {
+        type: 'register'
+      }
+    })
+  }
+
+  hasAccountOnPress = () => {
+    console.log('hasAccountOnPress')
+    this.props.navigator && this.props.navigator.pop()
+  }
 }
 
 const styles = StyleSheet.create({
@@ -117,7 +136,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     alignSelf: 'center',
-    marginTop: 40,
+    marginTop: 30,
   },
   textInputContainer: {
     flexDirection: 'row',
@@ -147,7 +166,7 @@ const styles = StyleSheet.create({
     marginRight:5,
   },
   capcha: {
-    width: 80,
+    width: 100,
     fontSize: 13,
     marginRight: 5,
     textAlign: 'center',
@@ -170,5 +189,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 10,
     textDecorationLine: 'underline'
+  },
+  hasAccount: {
+    fontSize: 13,
+    marginTop: 10,
+    textDecorationLine: 'underline',
+    marginRight: 0,
+    textAlign: 'right'
   }
 })

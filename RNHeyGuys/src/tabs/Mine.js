@@ -46,12 +46,6 @@ class Mine extends React.Component {
     userIcon: null
   }
 
-  constructor(props) {
-    super(props)
-    console.log('---------constructor------------')
-    
-  }
-
   componentDidMount() {
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent)
   }
@@ -70,6 +64,9 @@ class Mine extends React.Component {
           screen: 'RNHeyGuys.Login',
           title: '登录',
           animated: true,
+          passProps: {
+            type: 'login'
+          },
           navigatorStyle: {
             tabBarHidden: true
           }
