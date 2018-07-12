@@ -1,7 +1,6 @@
 import { AppRegistry, Platform } from 'react-native';
 import App from './App';
 import { Navigation } from 'react-native-navigation'
-import Icon from 'react-native-vector-icons/FontAwesome'
 
 import Home from './src/tabs/Home'
 import Category from './src/tabs/Category'
@@ -9,19 +8,6 @@ import ShopCart from './src/tabs/ShopCart'
 import Mine from './src/tabs/Mine'
 import Profile from './src/profile/Profile'
 import Login from './src/login/Login'
-
-
-async function prepareIcons() {
-  const icons = await Promise.all([
-    Icon.getImageSource('home', 30),
-    Icon.getImageSource('gear', 30),
-    Icon.getImageSource('shopping-cart', 30),
-    Icon.getImageSource('calendar-o', 30), // calendar-check-o
-    Icon.getImageSource('user', 30),
-  ])
-  const [home, cart, user, gear, calendar] = icons;
-  return { home, cart, user, gear, calendar };
-}
 
 function registerScreens() {
   Navigation.registerComponent('RNHeyGuys.Home', () => Home)
@@ -82,24 +68,20 @@ const tabs = [{
   title: '我的',
 }]
 
-async function startApp() {
-  
-  Navigation.startTabBasedApp({
-    tabs,
-    tabsStyle: {
-      tabBarHidden: true,
-      tabBarSelectedButtonColor: 'rgba(254, 205, 63, 1)',
-      tabBarBackgroundColor: 'white',
-      initialTabIndex: 3,
-      
-    },
-    appStyle: {
-      orientation: 'portrait',
-      bottomTabBadgeTextColor: '1',
-      bottomTabBadgeBackgroundColor: 'red',
-    }
-  })
-}
-startApp()
+Navigation.startTabBasedApp({
+  tabs,
+  tabsStyle: {
+    tabBarHidden: true,
+    tabBarSelectedButtonColor: 'rgba(254, 205, 63, 1)',
+    tabBarBackgroundColor: 'white',
+    initialTabIndex: 3,
+    
+  },
+  appStyle: {
+    orientation: 'portrait',
+    bottomTabBadgeTextColor: '1',
+    bottomTabBadgeBackgroundColor: 'red',
+  }
+})
 
 // AppRegistry.registerComponent('RNHeyGuys', () => App);

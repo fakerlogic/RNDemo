@@ -6,8 +6,6 @@ import {View, Text, StyleSheet, Image, Button} from 'react-native'
 
 export default class ShopCartItem extends React.Component {
 
-  
-
   render() {
     const {
       id,

@@ -1,42 +1,66 @@
 import React from 'react'
 import {View, Text, StyleSheet, Image, Button, TextInput} from 'react-native'
+import CountDownButton from '../components/CountDownButton'
 
 export default class Login extends React.Component {
 
   state = {
-    shouldShowCoundDown: false,//是否显示倒计时
-    requestCapchaTime: 30,
+    timerCount: this.props.timerCount || 30,
+    timerTitle: this.props.timerTitle || '获取验证码',
+    counting: false,
+    enable: true,
   }
 
-  getCapcha = () => {
-    console.log('点击了获取验证码按钮')
-    if (this.state.shouldShowCoundDown) {
-      return
+  shouldStartCountting = (shouldStart) => {
+    if (this.state.counting) { return }
+    if (shouldStart) {
+        this.countDown()
+        this.setState({counting: true,selfEnable:false})
+    } else {
+        this.setState({selfEnable:true})
     }
-    setInterval(() => {
-      this.countDown()
-    }, 1000)
   }
 
   countDown = () => {
     console.log(`倒计时===== ${this.state.requestCapchaTime}s`)
-    if (this.state.requestCodeTime === 0) {
-      this.setState({
-        shouldShowCoundDown: false
-    });
-      return;
-    }
-    this.setState({
-      requestCapchaTime: this.state.requestCapchaTime - 1
-    })
+    const codeTime = this.state.timerCount;
+    const now = Date.now()
+    const overTimeStamp = now + codeTime * 1000 + 100/*过期时间戳（毫秒） +100 毫秒容错*/
+    this.interval = setInterval(() =>{
+        /* 切换到后台不受影响*/
+        const nowStamp = Date.now()
+        if (nowStamp >= overTimeStamp) {
+            /* 倒计时结束*/
+            this.interval && clearInterval(this.interval);
+            this.setState({
+                timerCount: codeTime,
+                timerTitle: this.props.timerTitle || '获取验证码',
+                counting: false,
+                selfEnable: true
+            })
+            if (this.props.timerEnd) {
+                this.props.timerEnd()
+            }
+        } else {
+            const leftTime = parseInt((overTimeStamp - nowStamp)/1000, 10)
+            this.setState({
+                timerCount: leftTime,
+                timerTitle: `重新获取(${leftTime}s)`,
+            })
+        }
   }
 
   componentDidMount() {
+    
+  }
 
+  componentWillUnmount() {
+    clearInterval(this.interval)
   }
 
   render() {
-
+    const {onClick, style, textStyle, enable, disableColor} = this.props
+    const {counting, timerTitle, selfEnable} = this.state
     return (
       <View style={styles.container}>
         <Image style={styles.logo} source={require('../img/login/ip1.png')} resizeMode='contain' />
@@ -50,7 +74,7 @@ export default class Login extends React.Component {
             onChangeText={(text) => this.setState({text})}
           />
           <View style={styles.verticalLine}/>
-          <Text style={styles.capcha} onPress={this.getCapcha}>{this.state.shouldShowCoundDown ? this.state.requestCapchaTime: '获取验证码'}</Text>
+          <Text style={styles.capcha} onPress={this.getCapcha}>{this.state.shouldShowCoundDown ? this.state.requestCapchaTime : '获取验证码'}</Text>
         </View>
         <View style={styles.textInputContainer}>
           <Image source={require('../img/login/shield.png')} style={styles.textInputImage}/>
@@ -77,7 +101,7 @@ export default class Login extends React.Component {
   }
 
   loginButtonOnPress = () => {
-    this.refs.toast.show('login', 500)
+    // this.refs.toast.show('login', 500)
   }
 
 }
