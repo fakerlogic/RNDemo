@@ -10,7 +10,7 @@ export default class Login extends React.Component {
     counting: false,
     enable: true,
   }
-
+  
   shouldStartCountting = (shouldStart) => {
     if (this.state.counting) { return }
     if (shouldStart) {
