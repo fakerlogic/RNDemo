@@ -55,6 +55,10 @@ export default function request(url, options, method='POST') {
       newOptions.headers = {
         'Accept': 'application/json;text/plain, */*',
         'Content-Type': 'application/json',
+        'source-type': 'ios',
+        'encryptType': 2,
+        'role-type': 'cs',
+        'PLATFORM': 'HHJ',
         ...newOptions.headers,
       };
       newOptions.body = JSON.stringify(newOptions.body)

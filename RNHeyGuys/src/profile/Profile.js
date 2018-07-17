@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { FlatList, Text, View, StyleSheet, Image, TouchableWithoutFeedback, Alert } from 'react-native'
-import { green, yellow } from 'ansi-colors'
 import { Toast } from '../common/Toast'
 import request from '../utils/request'
-import axios from 'axios'
 
 class Profile extends React.Component {
 

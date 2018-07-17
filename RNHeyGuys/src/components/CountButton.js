@@ -2,7 +2,7 @@ import React from 'react'
 import { 
   View, 
   Text,
-  TouchableOpacity
+  TouchableWithoutFeedback
 } from 'react-native'
 
 
@@ -15,13 +15,7 @@ export default class CountButton extends React.Component {
       selfEnable: true,
   }
 
-  constructor(props) {
-    super(props)
-    this._shouldStartCountting = this._shouldStartCountting.bind(this)
-    this._countDownAction = this._countDownAction.bind(this)
-  }
-
-  _countDownAction() {
+  _countDownAction = () => {
     const codeTime = this.state.timerCount
     const now = Date.now()
     const overTimeStamp = now + codeTime * 1000 + 100/*过期时间戳（毫秒） +100 毫秒容错*/
@@ -33,7 +27,7 @@ export default class CountButton extends React.Component {
         this.interval && clearInterval(this.interval);
         this.setState({
           timerCount: codeTime,
-          timerTitle: this.props.timerTitle || '获取验证码',
+          timerTitle: '重新发送',
           counting: false,
           selfEnable: true
         })
@@ -44,14 +38,14 @@ export default class CountButton extends React.Component {
         const leftTime = parseInt((overTimeStamp - nowStamp) / 1000, 10)
         this.setState({
           timerCount: leftTime,
-          timerTitle: `重新获取(${leftTime}s)`,
+          timerTitle: `${leftTime}s`,
         })
       }
     }, 1000)
   }
 
-  _shouldStartCountting(shouldStart) {
-    if (this.state.counting) { return }
+  _shouldStartCountting = (shouldStart) => {
+    if (this.state.counting) { return false }
     if (shouldStart) {
       this._countDownAction()
       this.setState({ counting: true, selfEnable: false })
@@ -61,23 +55,23 @@ export default class CountButton extends React.Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval)
+    this.interval && clearInterval(this.interval)
   }
 
   render() {
     const { onClick, style, textStyle, enable, disableColor } = this.props
     const { counting, timerTitle, selfEnable } = this.state
     return (
-      <TouchableOpacity activeOpacity={ counting ? 1 : 0.6 } onPress = {() => {
+      <TouchableWithoutFeedback activeOpacity={ counting ? 1 : 0.6 } onPress = {() => {
         if (!counting && enable && selfEnable) {
           this.setState({ selfEnable: false })
-          this.props.onClick(this._shouldStartCountting)
+          onClick(this._shouldStartCountting)
         }
       }}>
-        <View style={[{width:120, height:44, justifyContent: 'center', alignItems: 'center'}, style]}>
+        <View style={[{width:100, height:44, justifyContent: 'center', alignItems: 'center'}, style]}>
           <Text style={[{fontSize: 13}, textStyle, {color: ((!counting && enable && selfEnable) ? (textStyle ? textStyle.color : 'blue') : disableColor || 'gray')}]}>{timerTitle}</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
     )
   }
 

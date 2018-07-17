@@ -64,6 +64,7 @@ class Mine extends React.Component {
           screen: 'RNHeyGuys.Login',
           title: '登录',
           animated: true,
+          backButtonTitle: '',
           passProps: {
             type: 'login'
           },
@@ -80,7 +81,7 @@ class Mine extends React.Component {
       screen: 'RNHeyGuys.Profile',
       title: '我的信息',
       animated: true,
-      backButtonTitle: '返回'
+      backButtonTitle: ''
     })
   }
 

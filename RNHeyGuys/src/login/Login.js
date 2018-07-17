@@ -1,7 +1,9 @@
 import React from 'react'
 import { View, Text, StyleSheet, Image, Button, TextInput, CheckBox } from 'react-native'
 import CountButton from '../components/CountButton'
-import Request from '../utils/request'
+import Api from '../api/api'
+import Toast from 'react-native-root-toast'
+import toast from '../utils/toast'
 
 export default class Login extends React.Component {
 
@@ -9,24 +11,38 @@ export default class Login extends React.Component {
     phoneNumber: '',
     capcha: ''
   }
-  
-  componentDidMount() {
-    const { type } = this.props
-    console.log(`props type: ${type}`)
+
+  getCapcha = (shouldStartCounting, type) => {
+    const regPhone = /^1[345678]\d{9}$/
+    const { phoneNumber } = this.state
+    if (!regPhone.test(phoneNumber)) {
+      toast(`手机号格式输入有误`)
+      shouldStartCounting(false)
+      return
+    }
+    const smsCode = type === 'login' ? 3 : 1
+
+    Api.getCapcha(phoneNumber, smsCode)
+    .then(data => {
+      console.log(`data: ${data}`)
+      if (data.succeed) {
+        shouldStartCounting(true)
+        toast(`验证码发送成功`)
+      } else {
+        shouldStartCounting(false)
+        toast(`error: ${data.errorMsg}`)
+      }
+    })
+    .catch(error => {
+      console.log(`error: ${error}`)
+      shouldStartCounting(false)
+      toast(`网络故障, 请你稍后重试`)
+    })
   }
 
-  getCapcha(shouldStartCounting) {
-    console.log('获取验证码中..')
-    this.setState({
-      state: '正在请求验证码'
-    })
-    setTimeout(() => {
-      const requestSucc = Math.random() + 0.5 > 1
-      this.setState({
-        state: `（随机）模拟验证码获取${requestSucc ? '成功' : '失败'}`
-      })
-      shouldStartCounting && shouldStartCounting(requestSucc)
-    }, 1000)
+  login = () => {
+
+    Api.login()
   }
 
   render() {
@@ -34,6 +50,7 @@ export default class Login extends React.Component {
     const { phoneNumber } = this.state
     console.log(`phoneNumber: ${phoneNumber}`)
     const buttonTitle = type === 'login' ? '登录' : '注册'
+
     return (
       <View style={styles.container}>
         <Image style={styles.logo} source={require('../img/login/ip1.png')} resizeMode='contain' />
@@ -44,13 +61,13 @@ export default class Login extends React.Component {
             placeholder='请输入手机号'
             maxLength={11}
             keyboardType='number-pad'
-            onChangeText={(text) => this.setState({phoneNumber: text})}
+            onChangeText={text => this.setState({phoneNumber: text})}
           />
           <View style={styles.verticalLine}/>
-          <CountButton enable={phoneNumber.length}
+          <CountButton enable={phoneNumber.length === 11}
             style={styles.capcha}
             textStyle={{color: 'black'}}
-            onClick={(shouldStartCounting) => this.getCapcha(shouldStartCounting)}
+            onClick={start => this.getCapcha(start, type)}
           />
         </View>
         <View style={styles.textInputContainer}>
@@ -60,7 +77,7 @@ export default class Login extends React.Component {
             placeholder='请输入验证码'
             keyboardType='number-pad'
             maxLength={4}
-            onChangeText={(text) => this.setState({text})}
+            onChangeText={text => this.setState({text})}
           />
         </View>
         { type === 'register' ? this.renderProtocol() : null }
@@ -72,6 +89,7 @@ export default class Login extends React.Component {
             backgroundColor='yellow'
             color='white'
           />
+          
         </View>
         { type === 'login' ? this.renderRegister() : this.renderHasAccount() }
 
@@ -112,7 +130,7 @@ export default class Login extends React.Component {
       screen: 'RNHeyGuys.Login',
       title: '注册',
       animated: true,
-      backButtonTitle: '返回',
+      backButtonTitle: '',
       passProps: {
         type: 'register'
       }
@@ -188,13 +206,15 @@ const styles = StyleSheet.create({
   register: {
     fontSize: 13,
     marginTop: 10,
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
+    alignSelf: 'flex-start',
   },
   hasAccount: {
     fontSize: 13,
     marginTop: 10,
     textDecorationLine: 'underline',
     marginRight: 0,
-    textAlign: 'right'
+    textAlign: 'right',
+    alignSelf: 'flex-end',
   }
 })
