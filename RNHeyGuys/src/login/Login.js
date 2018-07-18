@@ -1,10 +1,25 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image, Button, TextInput, CheckBox } from 'react-native'
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  Button, 
+  TextInput,
+  AsyncStorage
+} from 'react-native'
 import CountButton from '../components/CountButton'
 import Api from '../api/api'
 import Toast from 'react-native-root-toast'
 import toast from '../utils/toast'
 
+/**
+ * 登录注册页面
+ *
+ * @export
+ * @class Login
+ * @extends {React.Component}
+ */
 export default class Login extends React.Component {
 
   state = {
@@ -23,14 +38,14 @@ export default class Login extends React.Component {
     const smsCode = type === 'login' ? 3 : 1
 
     Api.getCapcha(phoneNumber, smsCode)
-    .then(data => {
-      console.log(`data: ${data}`)
-      if (data.succeed) {
+    .then(res => {
+      console.log(`res: ${res}`)
+      if (res.succeed) {
         shouldStartCounting(true)
         toast(`验证码发送成功`)
       } else {
         shouldStartCounting(false)
-        toast(`error: ${data.errorMsg}`)
+        toast(`error: ${res.errorMsg}`)
       }
     })
     .catch(error => {
@@ -38,11 +53,6 @@ export default class Login extends React.Component {
       shouldStartCounting(false)
       toast(`网络故障, 请你稍后重试`)
     })
-  }
-
-  login = () => {
-
-    Api.login()
   }
 
   render() {
@@ -83,13 +93,12 @@ export default class Login extends React.Component {
         { type === 'register' ? this.renderProtocol() : null }
         <View style={styles.buttonContainer}>
           <Button 
-            style={styles.loginButton} 
+            style={styles.loginButton}
             title={buttonTitle}
-            onPress={this.loginButtonOnPress} 
+            onPress={() => this.loginButtonOnPress(type)} 
             backgroundColor='yellow'
             color='white'
           />
-          
         </View>
         { type === 'login' ? this.renderRegister() : this.renderHasAccount() }
 
@@ -110,7 +119,6 @@ export default class Login extends React.Component {
   renderProtocol = () => {
     return (
       <View style={{flexDirection: 'row', paddingTop: 20}}>
-        
         <Text>我已同意并阅读</Text>
         <Text style={{color: 'rgba(73, 154, 256, 1)', paddingLeft: 4}}>好伙计用户协议</Text>
       </View>
@@ -119,9 +127,24 @@ export default class Login extends React.Component {
 
   /** actions */
 
-  loginButtonOnPress = () => {
-    // this.refs.toast.show('login', 500)
+  loginButtonOnPress = (type) => {
     console.log('loginButtonOnPress')
+    const { phoneNumber , capcha } = this.state
+    const smsCode = type === 'login' ? 3 : 1
+
+    Api.login(phoneNumber, capcha, smsCode)
+      .then( res => {
+        console.log(`res: ${res}`)
+        if (res.succeed) {
+          toast(`登录成功`)
+          this.saveUserInfo(res.data)
+        } else {
+          toast(`error: ${res.errorMsg}`)
+        }
+      })
+      .catch( error => {
+        toast(`网络故障, 请你稍后重试`)
+      })
   }
 
   registerOnPress = () => {
@@ -141,6 +164,18 @@ export default class Login extends React.Component {
     console.log('hasAccountOnPress')
     this.props.navigator && this.props.navigator.pop()
   }
+
+  /** private */
+
+  saveUserInfo = (data) => {
+    console.log(`storage ====> ${global.storage}`)
+    global.storage.save({
+      key: 'userInfo',
+      data: data,
+      expires: null
+    })
+  }
+
 }
 
 const styles = StyleSheet.create({

@@ -1,13 +1,27 @@
-import { AppRegistry, Platform } from 'react-native';
+import { 
+  AppRegistry, 
+  Platform, 
+  AsyncStorage 
+} from 'react-native';
 import App from './App';
 import { Navigation } from 'react-native-navigation'
-
+import Storage from 'react-native-storage'
 import Home from './src/tabs/Home'
 import Category from './src/tabs/Category'
 import ShopCart from './src/tabs/ShopCart'
 import Mine from './src/tabs/Mine'
 import Profile from './src/profile/Profile'
 import Login from './src/login/Login'
+
+
+var storage = new Storage({
+    size: 1000,
+    storageBackend: AsyncStorage,
+    defaultExpires: null,
+    enableCache: true,
+  }
+)
+
 
 function registerScreens() {
   Navigation.registerComponent('RNHeyGuys.Home', () => Home)
@@ -68,20 +82,27 @@ const tabs = [{
   title: '我的',
 }]
 
-Navigation.startTabBasedApp({
-  tabs,
-  tabsStyle: {
-    tabBarHidden: true,
-    tabBarSelectedButtonColor: 'rgba(254, 205, 63, 1)',
-    tabBarBackgroundColor: 'white',
-    initialTabIndex: 3,
-    
-  },
-  appStyle: {
-    orientation: 'portrait',
-    bottomTabBadgeTextColor: '1',
-    bottomTabBadgeBackgroundColor: 'red',
-  }
-})
+function startApp() {
+  
+  global.storage = storage
+
+  Navigation.startTabBasedApp({
+    tabs,
+    tabsStyle: {
+      tabBarHidden: true,
+      tabBarSelectedButtonColor: 'rgba(254, 205, 63, 1)',
+      tabBarBackgroundColor: 'white',
+      initialTabIndex: 3,
+      
+    },
+    appStyle: {
+      orientation: 'portrait',
+      bottomTabBadgeTextColor: '1',
+      bottomTabBadgeBackgroundColor: 'red',
+    }
+  })
+}
+startApp()
+
 
 // AppRegistry.registerComponent('RNHeyGuys', () => App);
