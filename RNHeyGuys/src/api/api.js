@@ -4,6 +4,14 @@ import { stringify } from 'qs'
 
 export default class Api {
 
+   /**
+    * 获取分类页分类
+    *
+    * @static
+    * @param {*} params
+    * @returns
+    * @memberof Api
+    */
    static getCategoryType(params) {
     return request('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
       body: {
@@ -12,9 +20,22 @@ export default class Api {
     }).then(res => console.log(`getCategoryType: ${res}`))
   }
   
-  // function getCategoryEs(params) {
-    
-  // }
+
+  /**
+   * 获取购物车列表
+   *
+   * @static
+   * @param {boolean} reload
+   * @returns
+   * @memberof Api
+   */
+  static getShopCartList(reload: boolean = false) {
+    return request('http://heyguys.ap88.com/settle-service/settleFromShopCar.apec', {
+      body: {
+        reload: reload
+      }
+    }).then(res => console.log(`getShopCartList: ${res}`))
+  }
   
   
    /**

@@ -1,5 +1,13 @@
 import React, { Component } from 'react'
-import { FlatList, Text, View, StyleSheet, Image, TouchableWithoutFeedback, Alert } from 'react-native'
+import { 
+  FlatList, 
+  Text, 
+  View, 
+  StyleSheet, 
+  Image, 
+  TouchableWithoutFeedback, 
+  Alert 
+} from 'react-native'
 import { Toast } from '../common/Toast'
 import request from '../utils/request'
 
@@ -8,20 +16,16 @@ class Profile extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: null
+      userInfo: null
     }
-    this.props.navigator.setStyle({
-      navBarBackgroundColor: 'blue'
-    })
   }
 
   componentDidMount() {
     this.getUserInfo()
-    
   }
 
   render() {
-    if (this.state.data == null) {
+    if (this.state.userInfo == null) {
       return (
         <View></View>
       )
@@ -29,7 +33,7 @@ class Profile extends React.Component {
     return (
       <View style={styles.container}> 
           {this.renderAvatar('头像')}
-          {this.state.data.map((element, index) => this.renderItem(element, index))}
+          {this.state.userInfo.map((element, index) => this.renderItem(element, index))}
       </View>
     )
   }
@@ -74,16 +78,17 @@ class Profile extends React.Component {
   }
 
   getUserInfo() {
-
-    request('http://heyguys.ap88.com/GOODSCORE-SERVICE/category/categroysByType.apec', {
-      body: {
-        categoryType: '2'
-      }
-    }).then(res => Alert.alert(JSON.stringify(res)))      
-
+      global.storage.load({
+        key: 'userInfo'
+      }).then(ret => {
+        console.log(`ret: ${JSON.stringify(ret)}`)
+        const userInfo = this.transformData(ret)
+        this.setState({userInfo})
+      })
   }
 
   transformData = (data) => {
+    console.log(`data: ${data.userName}`)
     return [
       {title: '*店铺名称', info: data.shopName},
       {title: '*用户姓名', info: data.userName},

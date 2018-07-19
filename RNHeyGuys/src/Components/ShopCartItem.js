@@ -1,6 +1,12 @@
 
 import React from 'react'
-import {View, Text, StyleSheet, Image, Button} from 'react-native'
+import {
+  View, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  Button
+} from 'react-native'
 
 
 
@@ -22,13 +28,19 @@ export default class ShopCartItem extends React.Component {
     } = this.props
 
     return (
-      <View style={styles.container}>
-        {this.renderSkuImage('https://heyguys-image.oss-cn-shenzhen.aliyuncs.com/29a8a23c739e77f5156bfbf9e360536d.png')}
-        
-        <View style={styles.textContainer}>
-          {this.rendertitle('五得利五星特精粉(东明)')}
-          {this.renderSubtitle('五得利五星特精粉（东明）25KG/包')}
-          {this.renderPrice(12)}
+      <View>
+        <View style={styles.container}>
+          {this.renderSkuImage('https://heyguys-image.oss-cn-shenzhen.aliyuncs.com/29a8a23c739e77f5156bfbf9e360536d.png')}
+          
+          <View style={styles.textContainer}>
+            {this.rendertitle('五得利五星特精粉(东明)')}
+            {this.renderSubtitle('五得利五星特精粉（东明）25KG/包')}
+            {this.renderPrice(12)}
+          </View>
+        </View>
+        <View style={{backgroundColor: 'red', flexDirection: 'row'}}>
+          <Text>每满16元,减2.46元</Text>
+          <Text>修改</Text>
         </View>
       </View>
     )
@@ -72,7 +84,7 @@ export default class ShopCartItem extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 12,
+    marginBottom: 12,
     backgroundColor: 'yellow',
     flexDirection: 'row',
     // justifyContent: 'center',

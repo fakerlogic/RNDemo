@@ -1,7 +1,12 @@
 import React from 'react'
-import { View, Text, StyleSheet, SectionList } from 'react-native'
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  SectionList 
+} from 'react-native'
 import ShopCartItem from '../components/ShopCartItem'
-
+import Api from '../api/api'
 
 class ShopCart extends React.Component {
 
@@ -9,6 +14,12 @@ class ShopCart extends React.Component {
     this.props.navigator.setTabBadge({
       badge: 12
     })
+
+    Api.getShopCartList()
+      .then(res => {
+        console.log(`shopcart: ${JSON.stringify(res)}`)
+      })
+    
   }
 
   render() {

@@ -87,7 +87,7 @@ export default class Login extends React.Component {
             placeholder='请输入验证码'
             keyboardType='number-pad'
             maxLength={4}
-            onChangeText={text => this.setState({text})}
+            onChangeText={text => this.setState({capcha: text})}
           />
         </View>
         { type === 'register' ? this.renderProtocol() : null }
@@ -129,7 +129,7 @@ export default class Login extends React.Component {
 
   loginButtonOnPress = (type) => {
     console.log('loginButtonOnPress')
-    const { phoneNumber , capcha } = this.state
+    const { phoneNumber, capcha } = this.state
     const smsCode = type === 'login' ? 3 : 1
 
     Api.login(phoneNumber, capcha, smsCode)
@@ -143,7 +143,7 @@ export default class Login extends React.Component {
         }
       })
       .catch( error => {
-        toast(`网络故障, 请你稍后重试`)
+        toast(`网络故障, 请您稍后重试`)
       })
   }
 
@@ -167,11 +167,11 @@ export default class Login extends React.Component {
 
   /** private */
 
-  saveUserInfo = (data) => {
+  saveUserInfo = (info) => {
     console.log(`storage ====> ${global.storage}`)
     global.storage.save({
       key: 'userInfo',
-      data: data,
+      data: info,
       expires: null
     })
   }

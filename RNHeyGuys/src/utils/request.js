@@ -1,4 +1,4 @@
-
+import { encryptToken } from '../utils/encrypt'
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -16,7 +16,16 @@ const codeMessage = {
   502: '网关错误。',
   503: '服务不可用，服务器暂时过载或维护。',
   504: '网关超时。',
-};
+}
+
+const defaultHeader = {
+  'Accept': 'application/json;text/plain, */*',
+  'Content-Type': 'application/json',
+  'source-type': 'ios',
+  'encryptType': 2,
+  'role-type': 'cs',
+  'PLATFORM': 'HHJ',
+}
 
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
@@ -40,12 +49,17 @@ function checkStatus(response) {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-export default function request(url, options, method='POST') {
+export default async function request(url, options, method='POST') {
+
+  const token = await global.storage.load({
+    key: 'token'
+  }) 
+  console.log(`request token: ${token}`)
   const defaultOptions = {
-    // credentials: 'include',
-    method: method
-  };
-  const newOptions = { ...defaultOptions, ...options };
+    method: method,
+    token: token || null
+  }
+  const newOptions = { ...defaultOptions, ...options }
   if (
     method === 'POST' ||
     method === 'PUT' ||
@@ -53,14 +67,9 @@ export default function request(url, options, method='POST') {
   ) {
     if (!(newOptions.body instanceof FormData)) {
       newOptions.headers = {
-        'Accept': 'application/json;text/plain, */*',
-        'Content-Type': 'application/json',
-        'source-type': 'ios',
-        'encryptType': 2,
-        'role-type': 'cs',
-        'PLATFORM': 'HHJ',
+        ...defaultHeader,
         ...newOptions.headers,
-      };
+      }
       newOptions.body = JSON.stringify(newOptions.body)
     } else {
       // newOptions.body is FormData
@@ -68,7 +77,7 @@ export default function request(url, options, method='POST') {
       newOptions.headers = {
         Accept: 'application/json',
         ...newOptions.headers,
-      };
+      }
     }
   }
   console.log(`url===${url}, newOptions===${JSON.stringify(newOptions)}`)
@@ -78,7 +87,10 @@ export default function request(url, options, method='POST') {
       if (newOptions.method === 'DELETE' || response.status === 204) {
         return response.text()
       }
-      console.log('response: ' + JSON.stringify(response))
+      const token = response.headers.map.token
+      if (token !== null) {
+        saveToken(token)
+      }
       return response.json()
     })
     .catch(e => {
@@ -102,5 +114,16 @@ export default function request(url, options, method='POST') {
       if (status >= 404 && status < 422) {
         // dispatch(routerRedux.push('/exception/404'));
       }
-    });
+    })
+}
+
+saveToken = (e) => {
+  // console.log('response: ' + JSON.stringify(response.headers.map.token))
+  // 给内存中的token赋值
+  // token = e
+  // 将token缓存起来
+  global.storage.save({
+    key: 'token',
+    data: encryptToken(e)
+  })
 }

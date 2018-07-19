@@ -81,7 +81,10 @@ class Mine extends React.Component {
       screen: 'RNHeyGuys.Profile',
       title: '我的信息',
       animated: true,
-      backButtonTitle: ''
+      backButtonTitle: '',
+      navigatorStyle: {
+        tabBarHidden: true
+      }
     })
   }
 
