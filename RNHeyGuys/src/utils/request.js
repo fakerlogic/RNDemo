@@ -57,7 +57,6 @@ export default async function request(url, options, method='POST') {
   console.log(`request token: ${token}`)
   const defaultOptions = {
     method: method,
-    token: token || null
   }
   const newOptions = { ...defaultOptions, ...options }
   if (
@@ -69,6 +68,7 @@ export default async function request(url, options, method='POST') {
       newOptions.headers = {
         ...defaultHeader,
         ...newOptions.headers,
+        token: token || null
       }
       newOptions.body = JSON.stringify(newOptions.body)
     } else {
@@ -88,7 +88,8 @@ export default async function request(url, options, method='POST') {
         return response.text()
       }
       const token = response.headers.map.token
-      if (token !== null) {
+      console.log(`fetch token++++: ${token}`)
+      if (token !== null && token !== undefined) {
         saveToken(token)
       }
       return response.json()

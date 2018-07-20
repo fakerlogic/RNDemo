@@ -92,7 +92,7 @@ function startApp() {
       tabBarHidden: true,
       tabBarSelectedButtonColor: 'rgba(254, 205, 63, 1)',
       tabBarBackgroundColor: 'white',
-      initialTabIndex: 3,
+      initialTabIndex: 2,
       
     },
     appStyle: {

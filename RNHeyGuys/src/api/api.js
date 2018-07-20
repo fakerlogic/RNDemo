@@ -17,7 +17,10 @@ export default class Api {
       body: {
         categoryType: '2'
       }
-    }).then(res => console.log(`getCategoryType: ${res}`))
+    }).then(res => {
+      console.log(`getCategoryType: ${res}`)
+      return res
+    })
   }
   
 
@@ -29,12 +32,15 @@ export default class Api {
    * @returns
    * @memberof Api
    */
-  static getShopCartList(reload: boolean = false) {
+  static getShopCartList(reload: boolean = true) {
     return request('http://heyguys.ap88.com/settle-service/settleFromShopCar.apec', {
       body: {
         reload: reload
       }
-    }).then(res => console.log(`getShopCartList: ${res}`))
+    }).then(res => { 
+      console.log(`getShopCartList: ${res}`)
+      return res
+    })
   }
   
   

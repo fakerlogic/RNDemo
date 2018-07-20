@@ -10,7 +10,6 @@ import {
 } from 'react-native'
 import CountButton from '../components/CountButton'
 import Api from '../api/api'
-import Toast from 'react-native-root-toast'
 import toast from '../utils/toast'
 
 /**
@@ -58,7 +57,7 @@ export default class Login extends React.Component {
   render() {
     const { type } = this.props
     const { phoneNumber } = this.state
-    console.log(`phoneNumber: ${phoneNumber}`)
+
     const buttonTitle = type === 'login' ? '登录' : '注册'
 
     return (
@@ -71,6 +70,7 @@ export default class Login extends React.Component {
             placeholder='请输入手机号'
             maxLength={11}
             keyboardType='number-pad'
+            clearButtonMode='while-editing'
             onChangeText={text => this.setState({phoneNumber: text})}
           />
           <View style={styles.verticalLine}/>
@@ -87,6 +87,7 @@ export default class Login extends React.Component {
             placeholder='请输入验证码'
             keyboardType='number-pad'
             maxLength={4}
+            clearButtonMode='while-editing'
             onChangeText={text => this.setState({capcha: text})}
           />
         </View>

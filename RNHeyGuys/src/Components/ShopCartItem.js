@@ -28,8 +28,9 @@ export default class ShopCartItem extends React.Component {
     } = this.props
 
     return (
-      <View>
+      <View style={{marginBottom: 12}}>
         <View style={styles.container}>
+        
           {this.renderSkuImage('https://heyguys-image.oss-cn-shenzhen.aliyuncs.com/29a8a23c739e77f5156bfbf9e360536d.png')}
           
           <View style={styles.textContainer}>
@@ -38,6 +39,7 @@ export default class ShopCartItem extends React.Component {
             {this.renderPrice(12)}
           </View>
         </View>
+
         <View style={{backgroundColor: 'red', flexDirection: 'row'}}>
           <Text>每满16元,减2.46元</Text>
           <Text>修改</Text>
@@ -84,7 +86,7 @@ export default class ShopCartItem extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 12,
+    // marginBottom: 12,
     backgroundColor: 'yellow',
     flexDirection: 'row',
     // justifyContent: 'center',
